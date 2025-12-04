@@ -1,0 +1,28 @@
+{
+  "name": "micaiahw5360-phub/tamcc-mealhouse",
+  "description": "TAMCC Mealhouse project",
+  "type": "project",
+  "license": "MIT",
+  "require": {
+    "php": "^8.0",
+    "ext-pdo": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "TAMCCMealhouse\\\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "TAMCCMealhouse\\\\Tests\\\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

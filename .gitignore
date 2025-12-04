@@ -1,0 +1,59 @@
+# TAMCC Mealhouse Git Ignore 
+# ============================================
+# TAMCC MEALHOUSE .gitignore FILE
+# ============================================
+
+# DON'T UPLOAD PASSWORDS!
+config.php
+database_credentials.ini
+.env
+
+# DON'T UPLOAD DATABASE BACKUPS!
+*.sql
+*.backup
+database_backup/
+backups/
+
+# DON'T UPLOAD XAMPP FILES!
+xampp/
+/xampp/
+apache/
+mysql/
+php/
+
+# DON'T UPLOAD UPLOADED FILES!
+uploads/
+images/uploads/
+user_uploads/
+profile_pictures/
+product_images/
+
+# DON'T UPLOAD TEMP FILES!
+tmp/
+temp/
+cache/
+*.tmp
+*.log
+
+# DON'T UPLOAD OPERATING SYSTEM FILES!
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# DON'T UPLOAD IDE FILES!
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ============================================
+# YOU CAN UPLOAD THESE (They're safe):
+# ============================================
+# header.php         ✅ SAFE
+# footer.php         ✅ SAFE
+# homepage.php       ✅ SAFE
+# login.php          ✅ SAFE
+# menu.php           ✅ SAFE
+# cart.php           ✅ SAFE
+# tamcc-mealhouse-style.css  ✅ SAFE
+# ta-logo-2048x683 (1).png   ✅ SAFE
