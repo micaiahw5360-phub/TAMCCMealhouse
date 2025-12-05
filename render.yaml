@@ -1,13 +1,23 @@
 services:
   - type: web
-    name: my-php-app
-    env: php
-    plan: free
-    buildCommand: ""
-    startCommand: php -S 0.0.0.0:$PORT -t public
-    healthCheckPath: /health
+    branch: master
     autoDeploy: true
+    name: tamccmealhouse
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
     envVars:
-      - key: ENVIRONMENT
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: 5432
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: APP_ENV
         value: production
-        dockerfilePath: Dockerfile
