@@ -72,7 +72,7 @@ $menuCategories = getHeaderMenuCategories($pdo);
             left: 0;
             width: 100%;
             z-index: 1000;
-            background: var(--card-bg);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
             transition: all 0.3s ease;
@@ -82,6 +82,7 @@ $menuCategories = getHeaderMenuCategories($pdo);
             padding-top: 70px; /* Reduced for mobile */
             background: var(--background);
             margin: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
         
         .navbar {
@@ -97,6 +98,7 @@ $menuCategories = getHeaderMenuCategories($pdo);
             align-items: center;
             text-decoration: none;
             gap: var(--space-md);
+            z-index: 1002;
         }
         
         .logo-image {
@@ -234,7 +236,8 @@ $menuCategories = getHeaderMenuCategories($pdo);
             border: none;
             cursor: pointer;
             padding: var(--space-sm);
-            z-index: 1001;
+            z-index: 1003;
+            position: relative;
         }
         
         .hamburger {
@@ -285,6 +288,26 @@ $menuCategories = getHeaderMenuCategories($pdo);
                 display: block;
             }
             
+            /* Mobile Menu Overlay */
+            .mobile-menu-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 998;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            .mobile-menu-overlay.active {
+                display: block;
+                opacity: 1;
+            }
+            
+            /* Mobile Menu Container */
             .nav-menu {
                 position: fixed;
                 top: 70px;
@@ -298,7 +321,9 @@ $menuCategories = getHeaderMenuCategories($pdo);
                 gap: 0;
                 transition: left 0.3s ease;
                 overflow-y: auto;
-                z-index: 999;
+                z-index: 1001;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+                margin: 0;
             }
             
             .nav-menu.active {
@@ -307,13 +332,22 @@ $menuCategories = getHeaderMenuCategories($pdo);
             
             .nav-menu li {
                 width: 100%;
+                margin: 0;
             }
             
             .nav-link {
                 display: block;
-                padding: var(--space-lg);
+                padding: var(--space-lg) var(--space-md);
                 border-bottom: 1px solid var(--border-color);
-                text-align: center;
+                text-align: left;
+                border-radius: 0;
+                margin: 0;
+            }
+            
+            .nav-link:hover,
+            .nav-link.active {
+                background: var(--accent-blue);
+                color: white;
             }
             
             .dropdown-content,
@@ -325,11 +359,13 @@ $menuCategories = getHeaderMenuCategories($pdo);
                 border: none;
                 padding: var(--space-md);
                 background: rgba(0,0,0,0.03);
+                margin-top: 0;
             }
             
             .dropdown.active .dropdown-content,
             .mega-dropdown.active .mega-dropdown-content {
                 display: block;
+                animation: slideDown 0.3s ease;
             }
             
             .mega-dropdown-columns {
@@ -363,6 +399,22 @@ $menuCategories = getHeaderMenuCategories($pdo);
             body {
                 padding-top: 70px;
             }
+            
+            /* Prevent body scroll when menu is open */
+            body.menu-open {
+                overflow: hidden;
+            }
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         @media (max-width: 480px) {
@@ -378,8 +430,14 @@ $menuCategories = getHeaderMenuCategories($pdo);
                 padding-top: 60px;
             }
             
-            .site-header {
-                padding: 0 var(--space-md);
+            .nav-menu {
+                top: 60px;
+                height: calc(100vh - 60px);
+            }
+            
+            .site-header .page-container {
+                padding-left: var(--space-md);
+                padding-right: var(--space-md);
             }
         }
     </style>
@@ -396,6 +454,9 @@ $menuCategories = getHeaderMenuCategories($pdo);
                 <button class="mobile-menu-btn" id="mobileMenuBtn">
                     <span class="hamburger"></span>
                 </button>
+                
+                <!-- Mobile Menu Overlay -->
+                <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
                 
                 <ul class="nav-menu" id="navMenu">
                     <li><a href="index.php" class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>">Home</a></li>
@@ -450,11 +511,22 @@ $menuCategories = getHeaderMenuCategories($pdo);
         // Mobile menu toggle
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const navMenu = document.getElementById('navMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
         const dropdowns = document.querySelectorAll('.dropdown, .mega-dropdown');
+        const body = document.body;
         
-        mobileMenuBtn.addEventListener('click', function() {
+        // Toggle mobile menu
+        mobileMenuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
             this.classList.toggle('active');
             navMenu.classList.toggle('active');
+            mobileMenuOverlay.classList.toggle('active');
+            body.classList.toggle('menu-open');
+        });
+        
+        // Close menu when clicking overlay
+        mobileMenuOverlay.addEventListener('click', function() {
+            closeMobileMenu();
         });
         
         // Mobile dropdown toggle
@@ -478,15 +550,38 @@ $menuCategories = getHeaderMenuCategories($pdo);
             });
         });
         
-        // Close menu when clicking outside
+        // Close mobile menu when clicking a regular link
+        document.querySelectorAll('.nav-menu a:not(.dropdown > .nav-link, .mega-dropdown > .nav-link)').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 1024) {
+                    closeMobileMenu();
+                }
+            });
+        });
+        
+        // Close mobile menu function
+        function closeMobileMenu() {
+            mobileMenuBtn.classList.remove('active');
+            navMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            body.classList.remove('menu-open');
+            dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
+        }
+        
+        // Close menu when clicking outside on mobile
         document.addEventListener('click', function(e) {
             if (window.innerWidth <= 1024 && 
                 !navMenu.contains(e.target) && 
                 !mobileMenuBtn.contains(e.target) &&
                 navMenu.classList.contains('active')) {
-                mobileMenuBtn.classList.remove('active');
-                navMenu.classList.remove('active');
-                dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
+                closeMobileMenu();
+            }
+        });
+        
+        // Close menu when window is resized to desktop size
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 1024 && navMenu.classList.contains('active')) {
+                closeMobileMenu();
             }
         });
         
