@@ -3,12 +3,10 @@ session_start();
 if (file_exists(__DIR__ . '/config.php')) {
     require_once 'config.php';
 } else {
-    // Define minimal configuration
     define('SITE_NAME', 'TAMCC Mealhouse');
     define('SITE_URL', 'https://tamccmealhouse.onrender.com');
 }
 
-// Include other files safely
 function includeIfExists($file) {
     if (file_exists(__DIR__ . '/' . $file)) {
         include $file;
@@ -20,47 +18,44 @@ function includeIfExists($file) {
 $page_title = "TAMCC Mealhouse - Campus Dining Solution";
 require_once 'header.php';
 
-// Get featured items for index
 $featured_stmt = $pdo->query("SELECT * FROM menu_items WHERE is_featured = TRUE AND is_available = TRUE LIMIT 6");
 $featured_items = $featured_stmt->fetchAll();
 
-// Get today's lunch specials
 $specials_sql = "
     SELECT mi.*, ds.special_price, ds.description as special_description
     FROM daily_specials ds
     JOIN menu_items mi ON ds.item_id = mi.item_id
-    WHERE ds.special_date = CURDATE() AND ds.is_active = TRUE AND mi.is_available = TRUE
+    WHERE ds.special_date = CURRENT_DATE AND ds.is_active = TRUE AND mi.is_available = TRUE
     LIMIT 3
 ";
 $specials_stmt = $pdo->query($specials_sql);
 $todays_specials = $specials_stmt->fetchAll();
 
-// Get combo meals
 $combos_stmt = $pdo->query("SELECT * FROM combo_meals WHERE is_available = TRUE ORDER BY display_order LIMIT 3");
 $combo_meals = $combos_stmt->fetchAll();
 
-// Get categories for navigation
 $categories_stmt = $pdo->query("SELECT * FROM menu_categories WHERE parent_id IS NULL AND is_active = TRUE ORDER BY display_order LIMIT 6");
 $categories = $categories_stmt->fetchAll();
 
-// Get stats for counters - using safe queries that won't cause errors
 try {
     $total_items_stmt = $pdo->query("SELECT COUNT(*) as total FROM menu_items WHERE is_available = TRUE");
     $total_items = $total_items_stmt->fetch()['total'];
 } catch (PDOException $e) {
-    $total_items = 24; // Fallback value
+    $total_items = 24;
 }
 
 try {
     $total_categories_stmt = $pdo->query("SELECT COUNT(*) as total FROM menu_categories WHERE is_active = TRUE");
     $total_categories = $total_categories_stmt->fetch()['total'];
 } catch (PDOException $e) {
-    $total_categories = 6; // Fallback value
+    $total_categories = 6;
 }
 
-// Use fallback values for orders since the table might not exist
-$total_orders = 387; // Demo value
+$total_orders = 387;
 ?>
+
+<!-- Keep the rest of your existing index.php HTML and CSS exactly as it was -->
+<!-- Only the PHP database queries above were updated -->
 
 <style>
 /* Enhanced index Styles */

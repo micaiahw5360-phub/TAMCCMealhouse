@@ -33,7 +33,7 @@
                 <div>
                     <h4 class="h5 mb-lg">Quick Links</h4>
                     <ul style="list-style: none;">
-                        <li class="mb-sm"><a href="homepage.php" class="text-small text-muted footer-link">Home</a></li>
+                        <li class="mb-sm"><a href="index.php" class="text-small text-muted footer-link">Home</a></li>
                         <li class="mb-sm"><a href="menu.php" class="text-small text-muted footer-link">Menu</a></li>
                         <li class="mb-sm"><a href="cart.php" class="text-small text-muted footer-link">Cart</a></li>
                         <li class="mb-sm"><a href="about.php" class="text-small text-muted footer-link">About Us</a></li>

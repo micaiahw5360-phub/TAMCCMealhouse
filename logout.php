@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once "config.php";
  
 // Unset all of the session variables
 $_SESSION = array();
@@ -40,7 +41,7 @@ session_destroy();
                 </div>
                 
                 <div class="mt-lg">
-                    <a href="homepage.php" class="btn btn-outline">Return to Homepage</a>
+                    <a href="index.php" class="btn btn-outline">Return to Home</a>
                 </div>
             </div>
             
@@ -53,9 +54,8 @@ session_destroy();
     </div>
 
     <script>
-        // Optional: Auto-redirect after 10 seconds
         setTimeout(function() {
-            window.location.href = 'homepage.php';
+            window.location.href = 'index.php';
         }, 10000);
     </script>
 </body>

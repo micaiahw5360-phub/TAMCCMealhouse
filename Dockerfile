@@ -1,14 +1,23 @@
 FROM php:8.2-apache
 
-# Copy all files
-COPY . /var/www/html/
+# Install PostgreSQL and required extensions
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    postgresql-client \
+    && docker-php-ext-install pdo pdo_pgsql pgsql \
+    && apt-get clean
 
-# Set proper directory index
-RUN echo "DirectoryIndex index.php index.html" > /etc/apache2/conf-available/directory-index.conf
-RUN a2enconf directory-index
+# Copy all files to web root
+COPY . /var/www/html/
 
 # Enable Apache modules
 RUN a2enmod rewrite
 
-# Set permissions
+# Set proper permissions
 RUN chown -R www-data:www-data /var/www/html
+
+# Set Apache to use /var/www/html as root
+ENV APACHE_DOCUMENT_ROOT /var/www/html
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+
+EXPOSE 80

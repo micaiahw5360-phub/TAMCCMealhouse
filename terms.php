@@ -218,7 +218,7 @@ require_once 'header.php';
         </div>
 
         <center>
-            <a href="homepage.php" class="back-btn">Back to Home</a>
+            <a href="index.php" class="back-btn">Back to Home</a>
         </center>
     </div>
 </div>

@@ -1,10 +1,12 @@
 <?php
 session_start();
- 
+
 if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     header("location: login.php");
     exit;
 }
+
+require_once "config.php";
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +52,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                                 <div class="text-primary" style="font-size: 2rem;">🛒</div>
                                 <h4 class="h5 mt-md">My Cart</h4>
                             </a>
-                            <a href="checkout.php" class="card p-xl text-center">
+                            <a href="checkout_form.php" class="card p-xl text-center">
                                 <div class="text-primary" style="font-size: 2rem;">📦</div>
                                 <h4 class="h5 mt-md">Checkout</h4>
                             </a>
@@ -62,7 +64,6 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     </main>
 
 <?php
-// Include footer at the end
 require_once 'footer.php';
 ?>
 </body>

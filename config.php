@@ -1,58 +1,78 @@
 <?php
-// config.php - Database Configuration
-
-// Check if we're on Render (production) or local
-if (getenv('RENDER')) {
-    // Render PostgreSQL (if you set up a database)
-    $db_host = getenv('DB_HOST') ?: 'localhost';
-    $db_name = getenv('DB_NAME') ?: 'tamcc_mealhouse';
-    $db_user = getenv('DB_USER') ?: 'postgres';
-    $db_pass = getenv('DB_PASSWORD') ?: '';
+if (getenv('RENDER') || getenv('DATABASE_URL')) {
+    $db_url = getenv('DATABASE_URL');
+    
+    if ($db_url) {
+        $url = parse_url($db_url);
+        $db_host = $url['host'];
+        $db_port = $url['port'] ?? 5432;
+        $db_name = ltrim($url['path'], '/');
+        $db_user = $url['user'];
+        $db_pass = $url['pass'];
+    } else {
+        $db_host = getenv('DB_HOST') ?: 'localhost';
+        $db_port = getenv('DB_PORT') ?: 5432;
+        $db_name = getenv('DB_NAME') ?: 'tamccmealhouse';
+        $db_user = getenv('DB_USER') ?: 'tamccmealhouse_user';
+        $db_pass = getenv('DB_PASSWORD') ?: '';
+    }
 } else {
-    // Local development
     $db_host = 'localhost';
-    $db_name = 'tamcc_mealhouse';
-    $db_user = 'root';
-    $db_pass = '';
+    $db_port = 5432;
+    $db_name = 'tamccmealhouse';
+    $db_user = 'postgres';
+    $db_pass = 'your_local_password';
 }
 
-// Try to connect to MySQL
-try {
-    $pdo = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    // Database connection failed
-    $pdo = null;
-    error_log("Database connection failed: " . $e->getMessage());
-}
-
-// Site Configuration
 define('SITE_NAME', 'TAMCC Mealhouse');
 define('SITE_URL', 'https://tamccmealhouse.onrender.com');
-define('DEBUG_MODE', true);
+define('SITE_EMAIL', 'contact@tamccmealhouse.com');
 
-// Error reporting
-if (defined('DEBUG_MODE') && DEBUG_MODE) {
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
+define('DEBUG_MODE', true);
+if (DEBUG_MODE) {
     error_reporting(E_ALL);
+    ini_set('display_errors', 1);
 } else {
-    ini_set('display_errors', 0);
     error_reporting(0);
+    ini_set('display_errors', 0);
 }
 
-// Timezone
 date_default_timezone_set('UTC');
 
-// Start session if not already started
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Helper function to get database connection
-function getDBConnection() {
+try {
+    $dsn = "pgsql:host=$db_host;port=$db_port;dbname=$db_name;";
+    
+    $pdo = new PDO($dsn, $db_user, $db_pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+        PDO::ATTR_PERSISTENT => false
+    ]);
+    
+    $pdo->exec("SET TIME ZONE 'UTC'");
+    $pdo->query("SELECT 1");
+    $database_connected = true;
+    
+} catch (PDOException $e) {
+    error_log("Database connection failed: " . $e->getMessage());
+    $pdo = null;
+    $database_connected = false;
+}
+
+function getDB() {
     global $pdo;
     return $pdo;
+}
+
+function getCurrentDate() {
+    return date('Y-m-d');
+}
+
+function pgCurrentDate() {
+    return "CURRENT_DATE";
 }
 ?>

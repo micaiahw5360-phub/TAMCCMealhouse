@@ -5,25 +5,20 @@ require_once "config.php";
 $page_title = "Menu - TAMCC Mealhouse";
 require_once 'header.php';
 
-// Get category and subcategory from URL
 $category_id = isset($_GET['category']) ? intval($_GET['category']) : 1;
 $subcategory_id = isset($_GET['subcategory']) ? intval($_GET['subcategory']) : null;
 
-// Get main categories for navigation
 $categories_stmt = $pdo->query("SELECT * FROM menu_categories WHERE parent_id IS NULL AND is_active = TRUE ORDER BY display_order");
 $categories = $categories_stmt->fetchAll();
 
-// Get current category name
 $current_category_stmt = $pdo->prepare("SELECT category_name FROM menu_categories WHERE category_id = ?");
 $current_category_stmt->execute([$category_id]);
 $current_category = $current_category_stmt->fetch();
 
-// Get subcategories for current category
 $subcategories_stmt = $pdo->prepare("SELECT * FROM menu_categories WHERE parent_id = ? AND is_active = TRUE ORDER BY display_order");
 $subcategories_stmt->execute([$category_id]);
 $subcategories = $subcategories_stmt->fetchAll();
 
-// Get menu items - using direct table queries instead of view
 if ($subcategory_id) {
     $items_sql = "
         SELECT mi.*, mc.category_name as main_category, sc.category_name as subcategory
@@ -49,12 +44,11 @@ if ($subcategory_id) {
 }
 $menu_items = $items_stmt->fetchAll();
 
-// Get today's lunch specials - using direct query
 $specials_sql = "
     SELECT mi.*, ds.special_price, ds.description as special_description
     FROM daily_specials ds
     JOIN menu_items mi ON ds.item_id = mi.item_id
-    WHERE ds.special_date = CURDATE() AND ds.is_active = TRUE AND mi.is_available = TRUE
+    WHERE ds.special_date = CURRENT_DATE AND ds.is_active = TRUE AND mi.is_available = TRUE
 ";
 $specials_stmt = $pdo->query($specials_sql);
 $todays_specials = $specials_stmt->fetchAll();
@@ -246,30 +240,6 @@ $featured_items = $featured_stmt->fetchAll();
             <p>Please check back later or try another category.</p>
         </div>
     <?php endif; ?>
-    
-    <!-- Quick Add Section -->
-    <?php if (!empty($featured_items)): ?>
-        <div class="quick-add-section">
-            <h2 style="text-align: center; color: var(--text-dark); margin-bottom: var(--space-lg);">
-                ⚡ Quick Add - Popular Items
-            </h2>
-            <div class="quick-add-grid">
-                <?php foreach ($featured_items as $item): ?>
-                    <div class="quick-add-item" onclick="quickAddToCart(<?= $item['item_id'] ?>)">
-                        <div class="item-image">
-                            <?php 
-                            $emojis = [1=>'🍳', 2=>'🍽️', 3=>'📋', 4=>'🎯', 5=>'🍰', 6=>'🥤'];
-                            echo $emojis[$item['category_id']] ?? '🍽️';
-                            ?>
-                        </div>
-                        <h4 class="item-name"><?= htmlspecialchars($item['item_name']) ?></h4>
-                        <div class="item-price">$<?= number_format($item['price'], 2) ?></div>
-                        <button class="btn btn-primary btn-sm" style="width: 100%;">Quick Add</button>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    <?php endif; ?>
 </div>
 
 <script>
@@ -295,7 +265,6 @@ function quickAddToCart(itemId) {
     form.submit();
 }
 
-// Simple quantity validation
 document.querySelectorAll('.quantity-input').forEach(input => {
     input.addEventListener('change', function() {
         let value = parseInt(this.value);

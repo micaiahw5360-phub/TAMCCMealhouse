@@ -5,14 +5,29 @@ require_once "config.php";
 $page_title = "Online Payment - TAMCC Mealhouse";
 require_once 'header.php';
 
-// Check if there's a pending order
 if (!isset($_SESSION['last_order'])) {
     header("Location: menu.php");
     exit;
 }
 
 $order_data = $_SESSION['last_order'];
+$order_number = $order_data['order_id'];
+
+try {
+    $order_stmt = $pdo->prepare("SELECT * FROM orders WHERE order_number = :order_number");
+    $order_stmt->execute([':order_number' => $order_number]);
+    $order = $order_stmt->fetch();
+    
+    if ($order) {
+        $order_data['order_total'] = $order['total_amount'];
+    }
+} catch (Exception $e) {
+    error_log("Error fetching order: " . $e->getMessage());
+}
 ?>
+
+<!-- Keep the rest of your existing online_pay.php HTML and CSS exactly as it was -->
+<!-- Only the PHP database queries above were updated -->
 
 <style>
 .payment-container {

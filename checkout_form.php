@@ -5,13 +5,11 @@ require_once "config.php";
 $page_title = "Checkout - TAMCC Mealhouse";
 require_once 'header.php';
 
-// Check if cart is empty
 if (empty($_SESSION['cart'])) {
     header("Location: menu.php?error=empty_cart");
     exit;
 }
 
-// Calculate cart total
 $subtotal = 0;
 $tax_rate = 0.10;
 $delivery_fee = 2.99;
@@ -24,6 +22,10 @@ $tax = $subtotal * $tax_rate;
 $total = $subtotal + $tax + $delivery_fee;
 ?>
 
+<!-- Update line 78 to use checkout.php -->
+<form method="POST" action="checkout.php">
+
+<!-- Keep the rest of your existing checkout_form.php exactly as it was -->
 <style>
 .checkout-container {
     max-width: 800px;
