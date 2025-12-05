@@ -39,164 +39,79 @@ if (isset($pdo) && $pdo) {
 <style>
 
     /* Hero Section Responsive Fixes */
-@media (max-width: 1024px) {
-    .hero-section {
-        padding: 3rem 0;
-        min-height: auto;
-    }
-    
-    .grid-2 {
-        grid-template-columns: 1fr !important;
-        gap: 2rem;
-    }
-    
-    .hero-content {
-        text-align: center;
-        order: 1;
-    }
-    
-    .hero-section .text-center {
-        order: 2;
-    }
-    
-    .hero-section h1 {
-        font-size: 2.5rem !important;
-        line-height: 1.2;
-        margin-bottom: 1rem !important;
-    }
-    
-    .hero-section .text-lead {
-        font-size: 1.1rem;
-        margin-bottom: 1.5rem !important;
-    }
-    
-    .hero-section .d-flex.gap-md {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem !important;
-    }
-    
-    .hero-section .btn {
-        min-width: 200px;
-        margin: 0.25rem;
-    }
-    
-    .hero-section .text-center div:first-child {
-        font-size: 5rem;
-    }
-    
-    .live-counter {
-        font-size: 2.5rem;
-    }
-}
-
+/* Hero Section Responsive Fixes */
 @media (max-width: 768px) {
+    /* Fix for grid layout */
+    .grid.grid-2 {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
     .hero-section {
-        padding: 2.5rem 0;
+        padding: 40px 0 !important;
+        min-height: auto !important;
     }
     
     .hero-section h1 {
         font-size: 2rem !important;
+        text-align: center;
     }
     
     .hero-section .text-lead {
-        font-size: 1rem;
+        font-size: 1rem !important;
+        text-align: center;
     }
     
-    .live-counter {
-        font-size: 2.2rem;
-    }
-    
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-    }
-    
-    .stat-card {
-        padding: 1.5rem;
-    }
-    
-    .stat-number {
-        font-size: 2rem;
-    }
-    
+    /* Fix button layout */
     .hero-section .d-flex.gap-md {
-        flex-direction: column;
-        align-items: center;
+        flex-direction: column !important;
+        align-items: center !important;
     }
     
     .hero-section .btn {
-        width: 100%;
+        width: 100% !important;
         max-width: 300px;
+        margin-bottom: 10px !important;
+    }
+    
+    /* Center the emoji */
+    .hero-section .text-center {
+        margin-top: 30px;
     }
     
     .hero-section .text-center div:first-child {
-        font-size: 4rem;
+        font-size: 4rem !important;
     }
     
-    .typewriter {
-        white-space: normal;
-        border-right: none;
-        animation: none;
-        overflow: visible;
+    /* Fix stats */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+    
+    .stat-number {
+        font-size: 1.8rem !important;
     }
 }
 
 @media (max-width: 480px) {
-    .hero-section {
-        padding: 2rem 0;
-    }
-    
-    .hero-section h1 {
-        font-size: 1.75rem !important;
-    }
-    
-    .hero-section .text-lead {
-        font-size: 0.95rem;
-    }
-    
-    .live-counter {
-        font-size: 1.8rem;
-    }
-    
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .hero-section .btn {
-        padding: 0.75rem 1rem;
-        font-size: 0.9rem;
-    }
-    
-    .hero-section .text-center div:first-child {
-        font-size: 3rem;
-    }
-    
-    .page-container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-    
-    .floating-cta {
-        bottom: 1rem;
-        right: 1rem;
-        font-size: 0.85rem;
-        padding: 0.75rem 1rem;
-    }
-}
-
-@media (max-width: 360px) {
     .hero-section h1 {
         font-size: 1.5rem !important;
     }
     
-    .logo-text {
-        font-size: 0.8rem;
+    .stats-grid {
+        grid-template-columns: 1fr !important;
     }
     
-    .hero-section .btn {
-        font-size: 0.85rem;
-        padding: 0.6rem 0.8rem;
+    .live-counter {
+        font-size: 2rem !important;
+    }
+    
+    .floating-cta {
+        bottom: 15px !important;
+        right: 15px !important;
+        font-size: 14px !important;
+        padding: 10px 15px !important;
     }
 }
 /* Enhanced index Styles */
