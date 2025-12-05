@@ -590,17 +590,19 @@ if (isset($pdo) && $pdo) {
     </section>
 
     <!-- Food Categories -->
-    <section class="section">
-        <div class="page-container">
-            <div class="text-center mb-3xl">
-                <h2 class="h2 mb-lg">🍽️ Browse Categories</h2>
-                <p class="text-lead text-muted">Something for every taste</p>
-            </div>
-            
-            <div class="grid grid-3">
-                <?php foreach ($categories as $category): ?>
-                    <a href="menu.php?category=<?php echo $category['category_id']; ?>" class="category-card">
-                        <div class="category-icon">
+<section class="section">
+    <div class="page-container">
+        <div class="text-center mb-3xl">
+            <h2 class="h2 mb-lg">🍽️ Browse Categories</h2>
+            <p class="text-lead text-muted">Something for every taste</p>
+        </div>
+        
+        <!-- Category Buttons Grid -->
+        <div class="grid grid-3">
+            <?php foreach ($categories as $category): ?>
+                <div class="text-center">
+                    <a href="menu.php?category=<?php echo $category['category_id']; ?>" class="btn btn-primary btn-lg mb-md" style="width: 100%; padding: var(--space-xl); font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 140px;">
+                        <div style="font-size: 2.5rem; margin-bottom: var(--space-sm);">
                             <?php 
                             $category_icons = [
                                 1 => '🍳', // Breakfast
@@ -613,13 +615,20 @@ if (isset($pdo) && $pdo) {
                             echo $category_icons[$category['category_id']] ?? '🍽️';
                             ?>
                         </div>
-                        <h3 class="h4 mb-sm"><?php echo htmlspecialchars($category['category_name']); ?></h3>
-                        <p class="text-small text-muted">Explore our delicious selection</p>
+                        <span><?php echo htmlspecialchars($category['category_name']); ?></span>
                     </a>
-                <?php endforeach; ?>
-            </div>
+                </div>
+            <?php endforeach; ?>
         </div>
-    </section>
+        
+        <!-- Browse Full Menu Button -->
+        <div class="text-center mt-3xl">
+            <a href="menu.php" class="btn btn-secondary btn-lg" style="padding: var(--space-lg) var(--space-3xl); font-size: 1.2rem;">
+                Browse Full Menu
+            </a>
+        </div>
+    </div>
+</section>
 
     <!-- Value Combos -->
     <?php if (!empty($combo_meals)): ?>
