@@ -65,6 +65,7 @@ $menuCategories = getHeaderMenuCategories($pdo);
     <link rel="stylesheet" href="tamcc-mealhouse-style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Enhanced Header Styles */
         .site-header {
             position: fixed;
             top: 0;
@@ -74,23 +75,67 @@ $menuCategories = getHeaderMenuCategories($pdo);
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
         }
 
         body { 
-            padding-top: 80px; 
+            padding-top: 70px; /* Reduced for mobile */
             background: var(--background);
             margin: 0;
         }
         
-        .nav-menu {
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md) 0;
             position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            gap: var(--space-md);
+        }
+        
+        .logo-image {
+            height: 40px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .nav-menu {
             display: flex;
             align-items: center;
             list-style: none;
             margin: 0;
             padding: 0;
+            gap: var(--space-md);
         }
 
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-primary);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-md);
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            background: var(--accent-blue);
+            color: white;
+        }
+        
+        /* Dropdown Styles */
         .dropdown {
             position: relative;
         }
@@ -138,8 +183,10 @@ $menuCategories = getHeaderMenuCategories($pdo);
         .mega-dropdown-content {
             display: none;
             position: absolute;
-            left: 0;
-            right: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
             background: var(--card-bg);
             box-shadow: var(--shadow-lg);
             z-index: 1000;
@@ -179,10 +226,160 @@ $menuCategories = getHeaderMenuCategories($pdo);
             transform: translateX(5px);
             border-bottom: 1px solid var(--accent-blue);
         }
-
-        @media (max-width: 768px) {
+        
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: var(--space-sm);
+            z-index: 1001;
+        }
+        
+        .hamburger {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: var(--text-primary);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger::before,
+        .hamburger::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 3px;
+            background: var(--text-primary);
+            left: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger::before {
+            top: -8px;
+        }
+        
+        .hamburger::after {
+            bottom: -8px;
+        }
+        
+        .mobile-menu-btn.active .hamburger {
+            background: transparent;
+        }
+        
+        .mobile-menu-btn.active .hamburger::before {
+            transform: rotate(45deg);
+            top: 0;
+        }
+        
+        .mobile-menu-btn.active .hamburger::after {
+            transform: rotate(-45deg);
+            bottom: 0;
+        }
+        
+        /* Mobile Menu Styles */
+        @media (max-width: 1024px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
             .nav-menu {
-                display: none !important;
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: var(--card-bg);
+                flex-direction: column;
+                align-items: stretch;
+                padding: var(--space-xl);
+                gap: 0;
+                transition: left 0.3s ease;
+                overflow-y: auto;
+                z-index: 999;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-menu li {
+                width: 100%;
+            }
+            
+            .nav-link {
+                display: block;
+                padding: var(--space-lg);
+                border-bottom: 1px solid var(--border-color);
+                text-align: center;
+            }
+            
+            .dropdown-content,
+            .mega-dropdown-content {
+                position: static;
+                display: none;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+                padding: var(--space-md);
+                background: rgba(0,0,0,0.03);
+            }
+            
+            .dropdown.active .dropdown-content,
+            .mega-dropdown.active .mega-dropdown-content {
+                display: block;
+            }
+            
+            .mega-dropdown-columns {
+                grid-template-columns: 1fr;
+            }
+            
+            /* Mobile dropdown toggle */
+            .dropdown > .nav-link,
+            .mega-dropdown > .nav-link {
+                position: relative;
+                padding-right: var(--space-2xl);
+            }
+            
+            .dropdown > .nav-link::after,
+            .mega-dropdown > .nav-link::after {
+                content: '▾';
+                position: absolute;
+                right: var(--space-lg);
+                transition: transform 0.3s ease;
+            }
+            
+            .dropdown.active > .nav-link::after,
+            .mega-dropdown.active > .nav-link::after {
+                transform: rotate(180deg);
+            }
+            
+            .logo-text {
+                font-size: 1rem;
+            }
+            
+            body {
+                padding-top: 70px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo-image {
+                height: 30px;
+            }
+            
+            .logo-text {
+                font-size: 0.875rem;
+            }
+            
+            body {
+                padding-top: 60px;
+            }
+            
+            .site-header {
+                padding: 0 var(--space-md);
             }
         }
     </style>
@@ -195,7 +392,12 @@ $menuCategories = getHeaderMenuCategories($pdo);
                     <img src="ta-logo-2048x683 (1).png" alt="T.A. Marryshow Community College" class="logo-image">
                     <span class="logo-text">TAMCC Mealhouse</span>
                 </a>
-                <ul class="nav-menu">
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span class="hamburger"></span>
+                </button>
+                
+                <ul class="nav-menu" id="navMenu">
                     <li><a href="index.php" class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>">Home</a></li>
                     
                     <li class="dropdown mega-dropdown">
@@ -245,6 +447,50 @@ $menuCategories = getHeaderMenuCategories($pdo);
     </header>
 
     <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navMenu = document.getElementById('navMenu');
+        const dropdowns = document.querySelectorAll('.dropdown, .mega-dropdown');
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            this.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+        
+        // Mobile dropdown toggle
+        dropdowns.forEach(dropdown => {
+            const link = dropdown.querySelector('.nav-link');
+            
+            link.addEventListener('click', function(e) {
+                if (window.innerWidth <= 1024) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Close other dropdowns
+                    dropdowns.forEach(other => {
+                        if (other !== dropdown && other.classList.contains('active')) {
+                            other.classList.remove('active');
+                        }
+                    });
+                    
+                    dropdown.classList.toggle('active');
+                }
+            });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 1024 && 
+                !navMenu.contains(e.target) && 
+                !mobileMenuBtn.contains(e.target) &&
+                navMenu.classList.contains('active')) {
+                mobileMenuBtn.classList.remove('active');
+                navMenu.classList.remove('active');
+                dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
+            }
+        });
+        
+        // Scroll effect
         window.addEventListener('scroll', function() {
             const header = document.querySelector('.site-header');
             const scrolled = window.pageYOffset > 50;

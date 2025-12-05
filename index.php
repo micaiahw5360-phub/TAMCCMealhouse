@@ -37,6 +37,185 @@ if (isset($pdo) && $pdo) {
 <!-- Only the PHP database queries above were updated -->
 
 <style>
+
+    @media (max-width: 1024px) {
+    .hero-section {
+        padding: var(--space-3xl) 0;
+        min-height: auto;
+    }
+    
+    .grid-2 {
+        grid-template-columns: 1fr;
+        gap: var(--space-2xl);
+    }
+    
+    .hero-content {
+        order: 1;
+        text-align: center;
+    }
+    
+    .hero-section .text-center {
+        order: 2;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.5rem;
+        line-height: 1.2;
+    }
+    
+    .hero-section .text-lead {
+        font-size: 1.1rem;
+    }
+    
+    .d-flex.gap-md {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--space-md) !important;
+    }
+    
+    .hero-section .btn {
+        min-width: 200px;
+        margin-bottom: var(--space-sm);
+    }
+    
+    .hero-section .text-center div:first-child {
+        font-size: 6rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: var(--space-2xl) 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-section .text-lead {
+        font-size: 1rem;
+    }
+    
+    .live-counter {
+        font-size: 2.5rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-md);
+    }
+    
+    .stat-card {
+        padding: var(--space-lg);
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .specials-carousel {
+        gap: var(--space-md);
+    }
+    
+    .special-card {
+        min-width: 280px;
+        padding: var(--space-lg);
+    }
+    
+    .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-md);
+    }
+    
+    .floating-cta {
+        bottom: var(--space-md);
+        right: var(--space-md);
+        font-size: 0.875rem;
+        padding: var(--space-sm) var(--space-md);
+    }
+    
+    .typewriter {
+        white-space: normal;
+        border-right: none;
+        animation: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section h1 {
+        font-size: 1.75rem;
+    }
+    
+    .hero-section .text-lead {
+        font-size: 0.95rem;
+    }
+    
+    .live-counter {
+        font-size: 2rem;
+    }
+    
+    .d-flex.gap-md {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .hero-section .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    .menu-item-card,
+    .category-card,
+    .special-card,
+    .combo-card {
+        padding: var(--space-lg);
+    }
+    
+    .menu-item-image {
+        font-size: 3rem;
+    }
+    
+    .category-icon {
+        font-size: 2.5rem;
+    }
+    
+    .hero-section .text-center div:first-child {
+        font-size: 4rem;
+    }
+    
+    .page-container {
+        padding-left: var(--space-md);
+        padding-right: var(--space-md);
+    }
+}
+
+/* Fix for small screens */
+@media (max-width: 360px) {
+    .hero-section h1 {
+        font-size: 1.5rem;
+    }
+    
+    .hero-section .text-lead {
+        font-size: 0.9rem;
+    }
+    
+    .logo-text {
+        font-size: 0.875rem;
+    }
+    
+    .btn {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.875rem;
+    }
+}
 /* Enhanced index Styles */
 .hero-section {
     background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
