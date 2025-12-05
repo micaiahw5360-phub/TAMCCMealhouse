@@ -1,7 +1,11 @@
-DirectoryIndex index.php index.html
+DirectoryIndex index.php 
 
 # If file doesn't exist, show 404
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
+# .htaccess
+Options -Indexes
+php_flag display_errors on
+php_value error_reporting E_ALL
