@@ -1,20 +1,46 @@
 <?php
-// TAMCC Mealhouse Configuration File
+// config.php - Database Configuration
 
-// Database Configuration (if needed)
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'tamcc_mealhouse');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// Check if we're on Render (production) or local
+if (getenv('RENDER')) {
+    // Render PostgreSQL (if you set up a database)
+    $db_host = getenv('DB_HOST') ?: 'localhost';
+    $db_name = getenv('DB_NAME') ?: 'tamcc_mealhouse';
+    $db_user = getenv('DB_USER') ?: 'postgres';
+    $db_pass = getenv('DB_PASSWORD') ?: '';
+} else {
+    // Local development
+    $db_host = 'localhost';
+    $db_name = 'tamcc_mealhouse';
+    $db_user = 'root';
+    $db_pass = '';
+}
+
+// Try to connect to MySQL
+try {
+    $pdo = new PDO("mysql:host=$db_host;dbname=$db_name;charset=utf8", $db_user, $db_pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    // Database connection failed
+    $pdo = null;
+    error_log("Database connection failed: " . $e->getMessage());
+}
 
 // Site Configuration
 define('SITE_NAME', 'TAMCC Mealhouse');
 define('SITE_URL', 'https://tamccmealhouse.onrender.com');
-define('SITE_EMAIL', 'contact@tamccmealhouse.com');
+define('DEBUG_MODE', true);
 
-// Display errors (only for development)
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Error reporting
+if (defined('DEBUG_MODE') && DEBUG_MODE) {
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+} else {
+    ini_set('display_errors', 0);
+    error_reporting(0);
+}
 
 // Timezone
 date_default_timezone_set('UTC');
@@ -24,16 +50,9 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Simple database connection function (if needed)
-function getDB() {
-    try {
-        $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        if ($conn->connect_error) {
-            return null;
-        }
-        return $conn;
-    } catch(Exception $e) {
-        return null;
-    }
+// Helper function to get database connection
+function getDBConnection() {
+    global $pdo;
+    return $pdo;
 }
 ?>

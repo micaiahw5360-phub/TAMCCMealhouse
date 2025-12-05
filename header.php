@@ -4,28 +4,65 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Include database configuration
-require_once 'config.php';
+// SAFELY include database configuration
+$config_file = 'config.php';
+if (file_exists($config_file)) {
+    require_once $config_file;
+} else {
+    // If config.php doesn't exist, set dummy values
+    $pdo = null;
+    define('SITE_NAME', 'TAMCC Mealhouse');
+    define('SITE_URL', 'https://tamccmealhouse.onrender.com');
+}
 
 // Get current page for active navigation highlighting
 $current_page = basename($_SERVER['PHP_SELF']);
 
-// Functions for menu categories
+// Functions for menu categories - SAFE VERSIONS
 function getHeaderMenuCategories($pdo) {
-    $sql = "SELECT * FROM header_menu_categories ORDER BY display_order";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // If no database connection, return dummy data
+    if (!$pdo) {
+        return [
+            ['category_id' => 1, 'category_name' => 'Breakfast'],
+            ['category_id' => 2, 'category_name' => 'Lunch'],
+            ['category_id' => 3, 'category_name' => 'Dinner'],
+            ['category_id' => 4, 'category_name' => 'Beverages'],
+            ['category_id' => 5, 'category_name' => 'Desserts'],
+        ];
+    }
+    
+    try {
+        $sql = "SELECT * FROM header_menu_categories ORDER BY display_order";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        // If query fails, return dummy data
+        return [
+            ['category_id' => 1, 'category_name' => 'Breakfast'],
+            ['category_id' => 2, 'category_name' => 'Lunch'],
+            ['category_id' => 3, 'category_name' => 'Dinner'],
+        ];
+    }
 }
 
 function getSubcategories($pdo, $parent_id) {
-    $sql = "SELECT * FROM menu_categories WHERE parent_id = ? AND is_active = TRUE ORDER BY display_order";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$parent_id]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // If no database connection, return empty array
+    if (!$pdo) {
+        return [];
+    }
+    
+    try {
+        $sql = "SELECT * FROM menu_categories WHERE parent_id = ? AND is_active = TRUE ORDER BY display_order";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$parent_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        return [];
+    }
 }
 
-// Get menu categories for dropdown
+// Get menu categories for dropdown - SAFE CALL
 $menuCategories = getHeaderMenuCategories($pdo);
 ?>
 <!DOCTYPE html>
@@ -436,12 +473,12 @@ $menuCategories = getHeaderMenuCategories($pdo);
     <header class="site-header">
         <div class="page-container">
             <nav class="navbar">
-                <a href="homepage.php" class="logo">
+                <a href="index.php" class="logo">
                     <img src="ta-logo-2048x683 (1).png" alt="T.A. Marryshow Community College" class="logo-image">
                     <span class="logo-text">TAMCC Mealhouse</span>
                 </a>
                 <ul class="nav-menu">
-                    <li><a href="homepage.php" class="nav-link <?php echo $current_page == 'homepage.php' ? 'active' : ''; ?>">Home</a></li>
+                    <li><a href="index.php" class="nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>">Home</a></li>
                     
                     <!-- Menu Dropdown -->
                     <li class="dropdown mega-dropdown">
@@ -500,7 +537,7 @@ $menuCategories = getHeaderMenuCategories($pdo);
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-content">
-            <a href="homepage.php" class="mobile-nav-link <?php echo $current_page == 'homepage.php' ? 'active' : ''; ?>">Home</a>
+            <a href="index.php" class="mobile-nav-link <?php echo $current_page == 'index.php' ? 'active' : ''; ?>">Home</a>
             
             <!-- Mobile Menu Categories Dropdown -->
             <div class="mobile-menu-category-dropdown">
