@@ -1,26 +1,59 @@
 <?php
-require_once 'config.php';
+// Simple test to check Render connection
+echo "<h2>Testing Render PostgreSQL Connection</h2>";
+
+if (getenv('DATABASE_URL')) {
+    echo "✅ DATABASE_URL environment variable is set<br>";
+    $url = parse_url(getenv('DATABASE_URL'));
+    
+    echo "Host: " . ($url['host'] ?? 'N/A') . "<br>";
+    echo "Database: " . (ltrim($url['path'] ?? '', '/')) . "<br>";
+    echo "Username: " . ($url['user'] ?? 'N/A') . "<br>";
+    echo "Password: " . (isset($url['pass']) ? '***' . substr($url['pass'], -4) : 'N/A') . "<br>";
+} else {
+    echo "⚠️ DATABASE_URL not set. Using local config.<br>";
+}
 
 try {
-    // Test connection
-    echo "✅ Database connection successful!<br>";
+    require_once 'config.php';
     
-    // Test if we can run a simple query
-    $stmt = $pdo->query("SELECT version()");
-    $version = $stmt->fetchColumn();
-    echo "✅ PostgreSQL version: " . $version . "<br>";
+    echo "<br>✅ config.php loaded successfully<br>";
     
-    // Check if users table exists
-    $stmt = $pdo->query("SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'users')");
-    $table_exists = $stmt->fetchColumn();
+    // Test query
+    $stmt = $pdo->query("SELECT 
+        version() as pg_version,
+        current_database() as database,
+        current_user as username,
+        inet_server_addr() as server_ip,
+        inet_server_port() as server_port");
     
-    if ($table_exists) {
-        echo "✅ 'users' table exists!";
+    $result = $stmt->fetch();
+    
+    echo "<h3>Connection Details:</h3>";
+    echo "<pre>";
+    print_r($result);
+    echo "</pre>";
+    
+    echo "<h3>Basic Tables Check:</h3>";
+    $stmt = $pdo->query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name");
+    $tables = $stmt->fetchAll();
+    
+    if (empty($tables)) {
+        echo "No tables found. Run the setup script.<br>";
     } else {
-        echo "❌ 'users' table does NOT exist!";
+        echo "Found " . count($tables) . " tables:<br>";
+        foreach ($tables as $table) {
+            echo "- " . $table['table_name'] . "<br>";
+        }
     }
     
-} catch(PDOException $e) {
-    echo "❌ Connection failed: " . $e->getMessage();
+} catch (Exception $e) {
+    echo "<div style='color: red; padding: 10px; border: 1px solid red;'>
+            <strong>Error:</strong> " . $e->getMessage() . "
+          </div>";
+    
+    echo "<h3>Debug Info:</h3>";
+    echo "DSN: " . ($dsn ?? 'Not set') . "<br>";
+    echo "Username: " . ($username ?? 'Not set') . "<br>";
 }
 ?>

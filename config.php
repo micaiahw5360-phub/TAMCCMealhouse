@@ -1,61 +1,50 @@
 <?php
-// TAMCC Mealhouse - PostgreSQL Configuration for Render
+// TAMCC Mealhouse Database Configuration for Render PostgreSQL
+// This supports both local development and Render deployment
 
-// Check if we're in production (Render) or local
-if (getenv('RENDER') || getenv('DATABASE_URL')) {
-    // Parse DATABASE_URL from Render
-    $db_url = getenv('DATABASE_URL');
+// Check if we're on Render (DATABASE_URL environment variable exists)
+if (getenv('DATABASE_URL')) {
+    // Parse the DATABASE_URL from Render
+    $url = parse_url(getenv('DATABASE_URL'));
     
-    if ($db_url) {
-        $url = parse_url($db_url);
-        $db_host = $url['host'];
-        $db_port = $url['port'] ?? 5432;
-        $db_name = ltrim($url['path'], '/');
-        $db_user = $url['user'];
-        $db_pass = $url['pass'];
-    } else {
-        // Use individual environment variables
-        $db_host = getenv('DB_HOST') ?: 'localhost';
-        $db_port = getenv('DB_PORT') ?: 5432;
-        $db_name = getenv('DB_NAME') ?: 'tamccmealhouse';
-        $db_user = getenv('DB_USER') ?: 'tamccmealhouse_user';
-        $db_pass = getenv('DB_PASSWORD') ?: '';
-    }
+    $host = $url['host'];
+    $port = $url['port'] ?? '5432';
+    $dbname = ltrim($url['path'], '/');
+    $username = $url['user'];
+    $password = $url['pass'];
+    
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+    
 } else {
-    // Local development
-    $db_host = 'localhost';
-    $db_port = 5432;
-    $db_name = 'tamccmealhouse';
-    $db_user = 'postgres';
-    $db_pass = 'postgres'; // Try this password
+    // Local development settings
+    $host = "localhost";
+    $port = "5432";
+    $dbname = "tamccmealhouse";
+    $username = "tamccmealhouse_user";  // Your Render username
+    $password = "2DL7YF3IDBJBxxE9Ieaf3tLlqkqFfjNo";  // Get this from Render dashboard
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
 }
 
-// Site Configuration
-define('SITE_NAME', 'TAMCC Mealhouse');
-define('SITE_URL', 'https://tamccmealhouse.onrender.com');
-define('SITE_EMAIL', 'contact@tamccmealhouse.com');
-
-// Error reporting
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// Timezone
-date_default_timezone_set('UTC');
-
-// Start session if not already started
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
-// PostgreSQL Connection - SIMPLIFIED
 try {
-    $dsn = "pgsql:host=$db_host;port=$db_port;dbname=$db_name";
-    $pdo = new PDO($dsn, $db_user, $db_pass);
+    $pdo = new PDO($dsn, $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "<!-- Database connected successfully -->";
-} catch (PDOException $e) {
-    // Don't die, just set to null
-    $pdo = null;
-    echo "<!-- Database connection failed, running in fallback mode -->";
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    
+    // Set timezone for the session
+    $pdo->exec("SET timezone = 'UTC'");
+    
+} catch(PDOException $e) {
+    // Don't expose the full error in production
+    if (getenv('DATABASE_URL')) {
+        // Production error
+        die("Database connection failed. Please check your Render database connection.");
+    } else {
+        // Development error - show details
+        die("Database connection failed: " . $e->getMessage());
+    }
 }
+
+// Application constants
+define('SITE_NAME', 'TAMCC Mealhouse');
+define('SITE_URL', 'https://tamccmealhouse.onrender.com'); // Update this
 ?>
