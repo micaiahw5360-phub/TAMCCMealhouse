@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: my-php-app
+    env: php
+    plan: free
+    buildCommand: ""
+    startCommand: php -S 0.0.0.0:$PORT -t public
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+        dockerfilePath: Dockerfile
