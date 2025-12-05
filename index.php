@@ -1,6 +1,21 @@
 <?php
 session_start();
-require_once "config.php";
+if (file_exists(__DIR__ . '/config.php')) {
+    require_once 'config.php';
+} else {
+    // Define minimal configuration
+    define('SITE_NAME', 'TAMCC Mealhouse');
+    define('SITE_URL', 'https://tamccmealhouse.onrender.com');
+}
+
+// Include other files safely
+function includeIfExists($file) {
+    if (file_exists(__DIR__ . '/' . $file)) {
+        include $file;
+    } else {
+        echo "<!-- $file not found -->";
+    }
+}
 
 $page_title = "TAMCC Mealhouse - Campus Dining Solution";
 require_once 'header.php';
