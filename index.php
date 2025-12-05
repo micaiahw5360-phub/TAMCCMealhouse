@@ -38,20 +38,21 @@ if (isset($pdo) && $pdo) {
 
 <style>
 
-    @media (max-width: 1024px) {
+    /* Hero Section Responsive Fixes */
+@media (max-width: 1024px) {
     .hero-section {
-        padding: var(--space-3xl) 0;
+        padding: 3rem 0;
         min-height: auto;
     }
     
     .grid-2 {
-        grid-template-columns: 1fr;
-        gap: var(--space-2xl);
+        grid-template-columns: 1fr !important;
+        gap: 2rem;
     }
     
     .hero-content {
-        order: 1;
         text-align: center;
+        order: 1;
     }
     
     .hero-section .text-center {
@@ -59,37 +60,43 @@ if (isset($pdo) && $pdo) {
     }
     
     .hero-section h1 {
-        font-size: 2.5rem;
+        font-size: 2.5rem !important;
         line-height: 1.2;
+        margin-bottom: 1rem !important;
     }
     
     .hero-section .text-lead {
         font-size: 1.1rem;
+        margin-bottom: 1.5rem !important;
     }
     
-    .d-flex.gap-md {
+    .hero-section .d-flex.gap-md {
         flex-wrap: wrap;
         justify-content: center;
-        gap: var(--space-md) !important;
+        gap: 1rem !important;
     }
     
     .hero-section .btn {
         min-width: 200px;
-        margin-bottom: var(--space-sm);
+        margin: 0.25rem;
     }
     
     .hero-section .text-center div:first-child {
-        font-size: 6rem;
+        font-size: 5rem;
+    }
+    
+    .live-counter {
+        font-size: 2.5rem;
     }
 }
 
 @media (max-width: 768px) {
     .hero-section {
-        padding: var(--space-2xl) 0;
+        padding: 2.5rem 0;
     }
     
     .hero-section h1 {
-        font-size: 2rem;
+        font-size: 2rem !important;
     }
     
     .hero-section .text-lead {
@@ -97,64 +104,23 @@ if (isset($pdo) && $pdo) {
     }
     
     .live-counter {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
     }
     
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: var(--space-md);
+        gap: 1rem;
     }
     
     .stat-card {
-        padding: var(--space-lg);
+        padding: 1.5rem;
     }
     
     .stat-number {
         font-size: 2rem;
     }
     
-    .specials-carousel {
-        gap: var(--space-md);
-    }
-    
-    .special-card {
-        min-width: 280px;
-        padding: var(--space-lg);
-    }
-    
-    .grid-3 {
-        grid-template-columns: repeat(2, 1fr);
-        gap: var(--space-md);
-    }
-    
-    .floating-cta {
-        bottom: var(--space-md);
-        right: var(--space-md);
-        font-size: 0.875rem;
-        padding: var(--space-sm) var(--space-md);
-    }
-    
-    .typewriter {
-        white-space: normal;
-        border-right: none;
-        animation: none;
-    }
-}
-
-@media (max-width: 480px) {
-    .hero-section h1 {
-        font-size: 1.75rem;
-    }
-    
-    .hero-section .text-lead {
-        font-size: 0.95rem;
-    }
-    
-    .live-counter {
-        font-size: 2rem;
-    }
-    
-    .d-flex.gap-md {
+    .hero-section .d-flex.gap-md {
         flex-direction: column;
         align-items: center;
     }
@@ -164,56 +130,73 @@ if (isset($pdo) && $pdo) {
         max-width: 300px;
     }
     
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .grid-3 {
-        grid-template-columns: 1fr;
-    }
-    
-    .menu-item-card,
-    .category-card,
-    .special-card,
-    .combo-card {
-        padding: var(--space-lg);
-    }
-    
-    .menu-item-image {
-        font-size: 3rem;
-    }
-    
-    .category-icon {
-        font-size: 2.5rem;
-    }
-    
     .hero-section .text-center div:first-child {
         font-size: 4rem;
     }
     
-    .page-container {
-        padding-left: var(--space-md);
-        padding-right: var(--space-md);
+    .typewriter {
+        white-space: normal;
+        border-right: none;
+        animation: none;
+        overflow: visible;
     }
 }
 
-/* Fix for small screens */
-@media (max-width: 360px) {
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 2rem 0;
+    }
+    
     .hero-section h1 {
-        font-size: 1.5rem;
+        font-size: 1.75rem !important;
     }
     
     .hero-section .text-lead {
+        font-size: 0.95rem;
+    }
+    
+    .live-counter {
+        font-size: 1.8rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .hero-section .btn {
+        padding: 0.75rem 1rem;
         font-size: 0.9rem;
     }
     
-    .logo-text {
-        font-size: 0.875rem;
+    .hero-section .text-center div:first-child {
+        font-size: 3rem;
     }
     
-    .btn {
-        padding: var(--space-sm) var(--space-md);
-        font-size: 0.875rem;
+    .page-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .floating-cta {
+        bottom: 1rem;
+        right: 1rem;
+        font-size: 0.85rem;
+        padding: 0.75rem 1rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .hero-section h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    .logo-text {
+        font-size: 0.8rem;
+    }
+    
+    .hero-section .btn {
+        font-size: 0.85rem;
+        padding: 0.6rem 0.8rem;
     }
 }
 /* Enhanced index Styles */
