@@ -32,6 +32,7 @@ if (isset($pdo) && $pdo) {
     ];
 }
 
+?>
 <!-- Keep the rest of your existing index.php HTML and CSS exactly as it was -->
 <!-- Only the PHP database queries above were updated -->
 
