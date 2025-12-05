@@ -8,7 +8,7 @@
 
 # \## 🌐 Live Demo
 
-# \- \*\*Website:\*\* \https://tamccmealhouse.onrender.com
+# \- \*\*Website:\*\* \[Coming Soon]
 
 # \- \*\*Admin:\*\* \[Coming Soon]
 
@@ -73,5 +73,4 @@
 # \# 2. Copy config.example.php to config.php
 
 # \# 3. Edit config.php with your database details
-
 
