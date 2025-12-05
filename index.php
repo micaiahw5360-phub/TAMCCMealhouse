@@ -15,7 +15,7 @@ $categories = [];
 if (isset($pdo) && $pdo) {
     try {
         // Get featured items
-        $featured_stmt = $pdo->query("SELECT * FROM menu_items WHERE is_featured = TRUE AND is_available = TRUE LIMIT 6");
+        $featured_stmt = $pdo->query("SELECT * FROM menu_items WHERE is_featured = true AND is_available = true LIMIT 6");
         $featured_items = $featured_stmt->fetchAll();
     } catch (Exception $e) {
         // Use fallback data
